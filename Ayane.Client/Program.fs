@@ -11,7 +11,7 @@ let run (client: IMyFirstService) =
 
 [<EntryPoint>]
 let main argv =
-    let channel = GrpcChannel.ForAddress("https://localhost:7253")
+    use channel = GrpcChannel.ForAddress("https://localhost:7253")
     let client = MagicOnionClient.Create<IMyFirstService>(channel)
 
     run client
