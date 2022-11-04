@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <!-- https://github.com/grpc/grpc/issues/20515#issuecomment-629415019 -->
+  <PropertyGroup>
+    <Protobuf_Generator>CSharp</Protobuf_Generator>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Shared.fs" />
+    <Compile Include="MyFirstService.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+    <PackageReference Include="MagicOnion.Server" Version="4.5.2" />
+  </ItemGroup>
+</Project>
