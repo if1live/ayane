@@ -2,11 +2,10 @@
 
 ![ayane](https://raw.githubusercontent.com/if1live/ayane/main/document/ayane-pv.jpg)
 
-> supabase free tier
 > Free projects are paused after 1 week of inactivity.
-> https://supabase.com/pricing
+> [supabase pricing](https://supabase.com/pricing)
 
-When application is inactive, some PaaS service suspend free-tier service.
+When application is inactive, some PaaS suspend free-tier service.
 Ayane send a simple request to prevent suspension of free-tier service.
 
 ## features
