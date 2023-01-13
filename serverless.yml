@@ -14,6 +14,7 @@ provider:
 
   memorySize: 128
   architecture: arm64
+  timeout: 5
 
   logRetentionInDays: 7
   versionFunctions: false

@@ -7,74 +7,124 @@ import { default as pg } from "pg";
 import * as mysql from "mysql2/promise";
 import { RowDataPacket } from "mysql2";
 
-const MYSQL_DATABASE_URL = process.env.MYSQL_DATABASE_URL;
-const POSTGRES_DATABASE_URL = process.env.POSTGRES_DATABASE_URL;
-const REDIS_URL = process.env.REDIS_URL;
+const touch_planetscale = async () => {
+  const endpoint = process.env.MYSQL_DATABASE_URL;
+  const label = "planetscale";
 
-export const touch: ScheduledHandler = async (event, context, cb) => {
-  console.log(JSON.stringify(event, null, 2));
+  const execute = async () => {
+    if (!endpoint) {
+      console.log(label, "mysql endpoint is not defined");
+      return null;
+    }
 
-  await Promise.allSettled([
-    touch_mysql(event, context, cb),
-    touch_postgres(event, context, cb),
-    touch_redis(event, context, cb),
-  ]);
+    const result = await touch_mysql(endpoint);
+    console.log(label, result);
+    return result;
+  };
+
+  return await wrapTouch(label, execute);
 };
 
-const touch_mysql: ScheduledHandler = async (event, _context) => {
-  if (!MYSQL_DATABASE_URL) {
-    console.log("MYSQL_DATABASE_URL is not defined");
-    return;
+const touch_supabase = async () => {
+  const endpoint = process.env.POSTGRES_DATABASE_URL;
+  const label = "supabase";
+
+  const execute = async () => {
+    if (!endpoint) {
+      console.log(label, "posgres endpoint is not defined");
+      return null;
+    }
+
+    const result = await touch_postgres(endpoint);
+    console.log(label, result);
+    return result;
+  };
+
+  return await wrapTouch(label, execute);
+};
+
+const touch_redislab = async () => {
+  const endpoint = process.env.REDIS_URL;
+  const label = "redislab";
+
+  const execute = async () => {
+    if (!endpoint) {
+      console.log(label, "redis endpoint is not defined");
+      return null;
+    }
+
+    const result = await touch_redis(endpoint);
+    console.log(label, result);
+    return result;
+  };
+
+  return await wrapTouch(label, execute);
+};
+
+const wrapTouch = async (label: string, fn: () => Promise<unknown>) => {
+  try {
+    const value = await fn();
+    return { label, value };
+  } catch (e: any) {
+    e.label = label;
+    throw e;
+  }
+};
+
+export const touch: ScheduledHandler = async (event, context) => {
+  console.log("event", JSON.stringify(event, null, 2));
+
+  const results = await Promise.allSettled([
+    touch_planetscale(),
+    touch_supabase(),
+    touch_redislab(),
+  ]);
+
+  for (const result of results) {
+    if (result.status == "fulfilled") {
+      continue;
+    }
+
+    const reason = result.reason;
+    console.log(JSON.stringify(reason, null, 2));
+    console.log("");
   }
 
-  const connection = await mysql.createConnection(MYSQL_DATABASE_URL!);
+  // TODO: 처리 결과를 외부로 보여줄 필요가 있나? 리포트는 어디로 올리지?
+};
 
-  const sql = "SELECT VERSION() AS version, NOW() AS now";
+const touch_mysql = async (endpoint: string) => {
+  const connection = await mysql.createConnection(endpoint);
+
+  const sql = "SELECT VERSION() AS version";
   const result = await connection.execute(sql);
   const rows = result[0] as RowDataPacket[];
-  const { version, now } = rows[0];
+  const row = rows[0];
   await connection.end();
 
-  const summary = {
-    tag: "mysql",
-    version,
-    now,
-  };
-  console.log(summary);
+  const data = row as unknown;
+  const now = new Date();
+  return { ...(data as object), now };
 };
 
-const touch_postgres: ScheduledHandler = async (event, _context) => {
-  if (!POSTGRES_DATABASE_URL) {
-    console.log("POSTGRES_DATABASE_URL is not defined");
-    return;
-  }
-
+const touch_postgres = async (endpoint: string) => {
   const client = new pg.Client({
-    connectionString: POSTGRES_DATABASE_URL,
+    connectionString: endpoint,
   });
 
   await client.connect();
   const result = await client.query(
     "SELECT VERSION() AS version, NOW() AS now"
   );
-  const { version, now } = result.rows[0];
+  const row = result.rows[0];
   await client.end();
 
-  const summary = {
-    tag: "postgres",
-    version,
-    now,
-  };
-  console.log(summary);
+  const data = row as unknown;
+  return data;
 };
 
-const touch_redis: ScheduledHandler = async (event, _context) => {
-  if (!REDIS_URL) {
-    console.log("REDIS_URL is not defined");
-    return;
-  }
-
-  const url = new URL(REDIS_URL);
+const touch_redis = async (endpoint: string) => {
+  const url = new URL(endpoint);
   const options: Redis.RedisOptions = {
     host: url.hostname,
     port: parseInt(url.port, 10),
@@ -93,10 +143,6 @@ const touch_redis: ScheduledHandler = async (event, _context) => {
 
   redis.disconnect(false);
 
-  const summary = {
-    tag: "redis",
-    result: pong,
-    now,
-  };
-  console.log(summary);
+  const data = { pong, now };
+  return data;
 };
