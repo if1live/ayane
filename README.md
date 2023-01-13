@@ -6,26 +6,19 @@
 > [supabase pricing](https://supabase.com/pricing)
 
 When application is inactive, some PaaS suspend free-tier service.
-Ayane send a simple request to prevent suspension of free-tier service.
+Ayane send a simple request everyday to prevent suspension of free-tier service.
 
 ## features
 
 * AWS Lambda + serverless framework
-    - trigger: [schedule](https://www.serverless.com/framework/docs/providers/aws/events/schedule)
-    - `schedule: cron(0 12 * * ? *)`
-        * everyday
-
+    - trigger: [schedule][serverless-schedule]
 * supported services
-    - execute simple query to mysql compatible server
+    - mysql compatible server
         * ex: [planetscale][planetscale]
-    - execute simple query to postgres compatible server
+    - postgres compatible server
         * ex: [supabase][supabase]
-    - ping to redis
+    - redis
         * ex: [redislab][redislab]
-
-[supabase]: https://supabase.com/
-[planetscale]: https://planetscale.com/
-[redislab]: https://redis.com/
 
 ## usage
 
@@ -40,3 +33,8 @@ remove line from .env if service not required
 pnpm install
 pnpx sls deploy
 ```
+
+[supabase]: https://supabase.com/
+[planetscale]: https://planetscale.com/
+[redislab]: https://redis.com/
+[serverless-schedule]: https://www.serverless.com/framework/docs/providers/aws/events/schedule
