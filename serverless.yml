@@ -3,8 +3,7 @@ service: ayane
 useDotenv: true
 
 plugins:
-  - serverless-esbuild
-  - serverless-offline
+  - serverless-scriptable-plugin
 
 provider:
   name: aws
@@ -27,12 +26,23 @@ provider:
     NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000"
     STAGE: ${self:provider.stage}
 
+    MYSQL_DATABASE_URL: ${env:MYSQL_DATABASE_URL}
+    POSTGRES_DATABASE_URL: ${env:POSTGRES_DATABASE_URL}
+    REDIS_URL: ${env:REDIS_URL}
+
+package:
+  patterns:
+    - "!**"
+    - "!node_modules/**"
+    - output/package.json
+    - output/handlers.js
+
 functions:
-  http:
-    handler: src/handlers.http
+  touch:
+    handler: output/handlers.touch
     events:
-      - httpApi: "*"
+      - schedule: cron(0 12 * * ? *)
 
 custom:
-  esbuild:
-    config: "./esbuild.config.cjs"
+  scriptHooks:
+    before:package:createDeploymentArtifacts: pnpm run package
