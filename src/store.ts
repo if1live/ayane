@@ -1,3 +1,4 @@
+import https from "node:https";
 import { Redis as UpstashRedis } from "@upstash/redis";
 import { Redis } from "ioredis";
 import {
@@ -10,10 +11,12 @@ function createUpstashRedis(): UpstashRedis | null {
   if (!UPSTASH_REDIS_REST_URL) return null;
   if (!UPSTASH_REDIS_REST_TOKEN) return null;
 
+  const agent = new https.Agent({ keepAlive: true });
   return new UpstashRedis({
     url: UPSTASH_REDIS_REST_URL,
     token: UPSTASH_REDIS_REST_TOKEN,
     responseEncoding: false,
+    agent,
   });
 }
 const upstashRedis = createUpstashRedis();
