@@ -1,36 +1,13 @@
 import { setTimeout } from "node:timers/promises";
-import {
-  APIGatewayProxyEventV2,
-  APIGatewayProxyResultV2,
-  Context,
-} from "aws-lambda";
+import { Router } from "itty-router";
+import { APIGatewayProxyResultV2 } from "aws-lambda";
 import { loadResults, redis } from "./store.js";
+import { MyRequest } from "./http.js";
 
-export type HttpFunction = (
-  event: APIGatewayProxyEventV2,
-  context: Context
-) => Promise<APIGatewayProxyResultV2>;
+export const router = Router();
 
-export const dispatch: HttpFunction = async (event, context) => {
-  const http = event.requestContext.http;
-  const path = http.path;
-  if (path.startsWith("/recent")) {
-    return await handle_recent(event, context);
-  } else if (path.startsWith("/exc")) {
-    return await handle_throw(event, context);
-  } else {
-    return await handle_dump(event, context);
-  }
-};
-
-const handle_dump: HttpFunction = async (event, context) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(event, null, 2),
-  };
-};
-
-const handle_recent: HttpFunction = async (event, context) => {
+router.get("/recent", async (req0) => {
+  const req = req0 as MyRequest;
   const results = await loadResults(redis);
   const entries = results.map((result) => {
     const { label, health } = result;
@@ -59,19 +36,23 @@ const handle_recent: HttpFunction = async (event, context) => {
     }
     return [label, data];
   });
+
   const output = Object.fromEntries(entries);
   return {
     statusCode: 200,
     body: JSON.stringify(output, null, 2),
   };
-};
+});
 
-async function throwExc(message: string) {
-  await setTimeout(10);
-  throw new Error(message);
-}
+router.get("/exc", async (req0) => {
+  const req = req0 as MyRequest;
+  const { event, context } = req.apiGateway;
 
-export const handle_throw: HttpFunction = async (event, context) => {
+  async function throwExc(message: string) {
+    await setTimeout(10);
+    throw new Error(message);
+  }
+
   try {
     await throwExc("sample");
   } catch (e: any) {
@@ -82,4 +63,23 @@ export const handle_throw: HttpFunction = async (event, context) => {
       body: JSON.stringify(event.requestContext.http, null, 2),
     };
   }
-};
+});
+
+router.all("/", async (req0) => {
+  const req1 = req0 as MyRequest;
+  const { apiGateway, ...req } = req1;
+  const { event, context } = apiGateway;
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ req, event }, null, 2),
+  };
+});
+
+router.all("*", () => {
+  const response: APIGatewayProxyResultV2 = {
+    statusCode: 404,
+    body: "Not Found",
+  };
+  return response;
+});

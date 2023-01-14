@@ -16,6 +16,7 @@ specifiers:
   expect: ^29.3.1
   ioredis: ^5.2.4
   ioredis-mock: ^8.2.2
+  itty-router: ^3.0.11
   mocha: ^10.2.0
   mysql2: ^3.0.1
   pg: ^8.8.0
@@ -32,6 +33,7 @@ dependencies:
   '@tinyhttp/dotenv': 2.0.5
   '@upstash/redis': 1.19.1
   ioredis: 5.2.4
+  itty-router: 3.0.11
   mysql2: 3.0.1
   pg: 8.8.0
 
@@ -3606,6 +3608,10 @@ packages:
     dependencies:
       ws: 7.5.9
     dev: true
+
+  /itty-router/3.0.11:
+    resolution: {integrity: sha512-vWsoHBi2CmU15YzyUeHjRfjdySL2jqZQKA9jP1LXkBcLJAo0KQNVlQMvhtzG0mzABhVYifeBF97UkrrpuTCWYQ==}
+    dev: false
 
   /java-invoke-local/0.0.6:
     resolution: {integrity: sha512-gZmQKe1QrfkkMjCn8Qv9cpyJFyogTYqkP5WCobX5RNaHsJzIV/6NvAnlnouOcwKr29QrxLGDGcqYuJ+ae98s1A==}

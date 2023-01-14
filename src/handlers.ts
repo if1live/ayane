@@ -1,10 +1,15 @@
-import type { APIGatewayProxyHandlerV2, ScheduledHandler } from "aws-lambda";
-import { dispatch } from "./apis.js";
+import type {
+  APIGatewayProxyHandlerV2,
+  APIGatewayProxyResultV2,
+  ScheduledHandler,
+} from "aws-lambda";
+import { createRouterRequest } from "./http.js";
 import {
   touchMysqlSettled,
   touchPostgresSettled,
   touchRedisSettled,
 } from "./providers.js";
+import { router } from "./router.js";
 import {
   MYSQL_DATABASE_URL,
   POSTGRES_DATABASE_URL,
@@ -65,5 +70,7 @@ export const touch: ScheduledHandler = async (event, context) => {
 };
 
 export const http: APIGatewayProxyHandlerV2 = async (event, context) => {
-  return await dispatch(event, context);
+  const input = createRouterRequest(event, context);
+  const output: APIGatewayProxyResultV2 = await router.handle(input);
+  return output;
 };
