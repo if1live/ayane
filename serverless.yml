@@ -46,6 +46,9 @@ functions:
     handler: output/handlers.touch
     events:
       - schedule: cron(0 12 * * ? *)
+  http:
+    handler: output/handlers.http
+    url: true
 
 custom:
   scriptHooks:
