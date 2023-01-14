@@ -37,6 +37,7 @@
     "regenerator-runtime": "^0.13.11",
     "rimraf": "^4.0.4",
     "serverless": "^3.0.0",
+    "serverless-offline": "^12.0.4",
     "serverless-scriptable-plugin": "^1.2.2",
     "ts-node": "^10.4.0",
     "tsconfig-paths": "^3.9.0",

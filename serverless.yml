@@ -3,6 +3,7 @@ service: ayane
 useDotenv: true
 
 plugins:
+  - serverless-offline
   - serverless-scriptable-plugin
 
 provider:
@@ -50,7 +51,12 @@ functions:
   http:
     handler: output/handlers.http
     url: true
+    events:
+      - httpApi: "*"
 
 custom:
   scriptHooks:
+    # https://github.com/weixu365/serverless-scriptable-plugin/issues/49#issuecomment-594383342
+    # serverless-offline 이전에 직접 빌드
+    before:offline:start:init: pnpm run package
     before:package:createDeploymentArtifacts: pnpm run package
