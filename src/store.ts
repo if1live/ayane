@@ -6,15 +6,21 @@ import {
 } from "./settings.js";
 import { ServiceHealth, TouchSettledResult } from "./types.js";
 
-const upstashRedis = new UpstashRedis({
-  url: UPSTASH_REDIS_REST_URL!,
-  token: UPSTASH_REDIS_REST_TOKEN!,
-  responseEncoding: false,
-});
+function createUpstashRedis(): UpstashRedis | null {
+  if (!UPSTASH_REDIS_REST_URL) return null;
+  if (!UPSTASH_REDIS_REST_TOKEN) return null;
+
+  return new UpstashRedis({
+    url: UPSTASH_REDIS_REST_URL,
+    token: UPSTASH_REDIS_REST_TOKEN,
+    responseEncoding: false,
+  });
+}
+const upstashRedis = createUpstashRedis();
 
 // redis와의 접속은 serverless 특성을 생각해서 http 기반 upstash redis 사용한다.
 // 하지만 개발할때는 ioredis-mock같은거 쓰려고 ioredis처럼 취급한다.
-export const redis = upstashRedis as any as Redis;
+export const redis = upstashRedis as unknown as Redis;
 
 const key = "ayane_status";
 
