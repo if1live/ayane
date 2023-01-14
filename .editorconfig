@@ -17,3 +17,7 @@ indent_size = 2
 [*.{js,ts,jsx,tsx,mjs,mts,cjs,cts}]
 indent_style = space
 indent_size = 2
+
+[*.{html,htm}]
+indent_style = space
+indent_size = 2
