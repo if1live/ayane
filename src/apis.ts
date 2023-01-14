@@ -71,10 +71,15 @@ async function throwExc(message: string) {
   throw new Error(message);
 }
 
-const handle_throw: HttpFunction = async (event, context) => {
-  await throwExc("sample");
-  return {
-    statusCode: 200,
-    body: "throw?",
-  };
+export const handle_throw: HttpFunction = async (event, context) => {
+  try {
+    await throwExc("sample");
+  } catch (e: any) {
+    console.error(e);
+  } finally {
+    return {
+      statusCode: 200,
+      body: JSON.stringify(event.requestContext.http, null, 2),
+    };
+  }
 };

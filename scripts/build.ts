@@ -10,7 +10,9 @@ const __dirname = '.';
 
 // https://github.com/evanw/esbuild/issues/946#issuecomment-911869872
 const common: esbuild.BuildOptions = {
-  // 클래스 이름이 뭉개지면 문제가 생길수 있다
+  // identifiers까지 minifiy 적용하면 소스맵에 들어가는 이름도 뭉개진다
+  // 적용할 경우 "at Ap (/var/task/src/apis.ts:71:9)" 같이 나온다.
+  // 타입스크립트 파일명과 라인은 제대로 나와서 못 쓸 물건은 아니다 이름까지 제대로 나오면 좋겠다
   minifyIdentifiers: false,
   minifySyntax: true,
   minifyWhitespace: false, //true,

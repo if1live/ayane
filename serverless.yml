@@ -40,6 +40,7 @@ package:
     - "!node_modules/**"
     - output/package.json
     - output/handlers.js
+    - output/handlers.js.map
 
 functions:
   touch:
