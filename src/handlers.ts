@@ -1,4 +1,5 @@
 import type { APIGatewayProxyHandlerV2, ScheduledHandler } from "aws-lambda";
+import { dispatch } from "./apis.js";
 import {
   touchMysqlSettled,
   touchPostgresSettled,
@@ -9,7 +10,7 @@ import {
   POSTGRES_DATABASE_URL,
   REDIS_URL,
 } from "./settings.js";
-import { loadResults, redis, saveResult } from "./store.js";
+import { redis, saveResult } from "./store.js";
 
 /*
 각각의 touch는 독립적으로 처리되면 좋겠다
@@ -64,37 +65,5 @@ export const touch: ScheduledHandler = async (event, context) => {
 };
 
 export const http: APIGatewayProxyHandlerV2 = async (event, context) => {
-  const results = await loadResults(redis);
-  const entries = results.map((result) => {
-    const { label, health } = result;
-
-    let data: unknown;
-    switch (health.tag) {
-      case "ok":
-        data = {
-          tag: health.tag,
-          at: new Date(health.dateStr),
-          value: health.value,
-        };
-        break;
-      case "error":
-        data = {
-          tag: health.tag,
-          at: new Date(health.dateStr),
-          reason: {
-            name: health.reason.name,
-          },
-        };
-        break;
-      case "ignore":
-        data = undefined;
-        break;
-    }
-    return [label, data];
-  });
-  const output = Object.fromEntries(entries);
-  return {
-    statusCode: 200,
-    body: JSON.stringify(output, null, 2),
-  };
+  return await dispatch(event, context);
 };
