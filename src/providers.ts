@@ -2,24 +2,13 @@ import { default as Redis } from "ioredis";
 import { default as pg } from "pg";
 import * as mysql from "mysql2/promise";
 import { RowDataPacket } from "mysql2";
+import { TouchSettledResult } from "./types.js";
 
 /*
 설계 정책
 - connection은 제한된 자원이라서 touch 이후에 연결 해제
 - 외부 자원 연결은 실패할수 있고 이를 명시적으로 처리하고 싶다
 */
-
-interface TouchFulfilledResult<T> {
-  status: "fulfilled";
-  value: T;
-}
-
-interface TouchRejectedResult {
-  status: "rejected";
-  reason: Error;
-}
-
-type TouchSettledResult<T> = TouchFulfilledResult<T> | TouchRejectedResult;
 
 export const wrapSettled = async <T>(
   execute: () => Promise<T>
