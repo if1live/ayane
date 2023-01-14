@@ -1,5 +1,7 @@
 # Ayane
 
+[![ci](https://github.com/if1live/ayane/actions/workflows/ci.yml/badge.svg)](https://github.com/if1live/ayane/actions/workflows/ci.yml)
+
 ![ayane](https://raw.githubusercontent.com/if1live/ayane/main/document/ayane-pv.jpg)
 
 > Free projects are paused after 1 week of inactivity.
