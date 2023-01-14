@@ -31,6 +31,9 @@ provider:
     POSTGRES_DATABASE_URL: ${env:POSTGRES_DATABASE_URL}
     REDIS_URL: ${env:REDIS_URL}
 
+    UPSTASH_REDIS_REST_URL: ${env:UPSTASH_REDIS_REST_URL}
+    UPSTASH_REDIS_REST_TOKEN: ${env:UPSTASH_REDIS_REST_TOKEN}
+
 package:
   patterns:
     - "!**"
