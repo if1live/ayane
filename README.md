@@ -10,8 +10,9 @@ Ayane send a simple request everyday to prevent suspension of free-tier service.
 
 ## features
 
-* AWS Lambda + serverless framework
+* AWS Lambda + serverless framework + upstash
     - trigger: [schedule][serverless-schedule]
+    - database: [upstash][upstash]
 * supported services
     - mysql compatible server
         * ex: [planetscale][planetscale]
@@ -27,6 +28,7 @@ cp .env.localhost .env
 edit .env
 
 remove line from .env if service not required
+fill UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN to save PaaS status
 ```
 
 ```bash
@@ -34,6 +36,7 @@ pnpm install
 pnpx sls deploy
 ```
 
+[upstash]: https://upstash.com/
 [supabase]: https://supabase.com/
 [planetscale]: https://planetscale.com/
 [redislab]: https://redis.com/
