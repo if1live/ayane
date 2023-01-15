@@ -39,3 +39,54 @@ jobs:
 
       - run: pnpm build
       - run: pnpm test
+
+  deploy:
+    if: ${{ github.event_name == 'push' && (github.ref_name == 'main') }}
+
+    needs: [main]
+    runs-on: ubuntu-latest
+    environment: deploy
+
+    env:
+      UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+      UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+      MYSQL_DATABASE_URL: ${{ secrets.MYSQL_DATABASE_URL }}
+      POSTGRES_DATABASE_URL: ${{ secrets.POSTGRES_DATABASE_URL }}
+      REDIS_URL: ${{ secrets.REDIS_URL }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+
+      - uses: pnpm/action-setup@v2
+        id: pnpm-install
+        with:
+          version: 6
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - run: pnpm sls deploy
