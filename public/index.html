@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Ayane</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css" />
+</head>
+
+<body>
+  <div class="ui container">
+    <h1 class="ui header">
+      <a href="https://github.com/if1live/ayane" target="_blank">Ayane</a>
+    </h1>
+
+    <img class="ui large image" src="https://raw.githubusercontent.com/if1live/ayane/main/document/ayane-pv.jpg">
+
+    <div id="ayane-wrapper" class="ui items"></div>
+  </div>
+
+  <script type="text/javascript">
+    // 정적 사이트 관리 귀찮으니 깡으로 때려박자
+    // 람다 함수 1개 배포로 프론트엔드까지 떄우고싶다
+    async function main() {
+      const resp = await fetch('/recent');
+      const json = await resp.json();
+      const entries = Object.entries(json);
+
+      const wrapper = document.querySelector('#ayane-wrapper');
+
+      for (const entry of entries) {
+        const [label, result] = entry;
+        const { tag, at, ...rest } = result;
+        const date = new Date(at);
+        const content = rest.value ?? rest.reason ?? rest;
+
+        const box = `
+        <div class="item">
+          <div class="content">
+            <h2 class="header">${label} <small>${tag}</small></h2>
+          </div>
+          <div class="meta">
+            <span>${date.toISOString()} | ${date.toLocaleString()}</span>
+          </div>
+          <div class="description">
+            <pre>${JSON.stringify(content, null, 2)}</pre>
+          </div>
+        </div>
+        `;
+
+        const rootNode = document.createElement('div');
+        rootNode.innerHTML = box;
+        wrapper.appendChild(rootNode);
+      }
+    }
+
+    window.onload = () => {
+      main();
+    };
+  </script>
+</body>

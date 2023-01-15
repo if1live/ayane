@@ -39,6 +39,7 @@ package:
   patterns:
     - "!**"
     - "!node_modules/**"
+    - public/index.html
     - output/package.json
     - output/handlers.js
     - output/handlers.js.map

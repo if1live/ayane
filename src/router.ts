@@ -1,3 +1,5 @@
+import path from "node:path";
+import { readFile } from "node:fs/promises";
 import { setTimeout } from "node:timers/promises";
 import { Router } from "itty-router";
 import { APIGatewayProxyResultV2 } from "aws-lambda";
@@ -65,7 +67,21 @@ router.get("/exc", async (req0) => {
   }
 });
 
-router.all("/", async (req0) => {
+router.get("/", async (req0): Promise<APIGatewayProxyResultV2> => {
+  const req = req0 as MyRequest;
+  const fp = path.join(process.cwd(), "public", "index.html");
+  const html = await readFile(fp, "utf-8");
+
+  return {
+    statusCode: 200,
+    body: html,
+    headers: {
+      "content-type": "text/html",
+    },
+  };
+});
+
+router.all("/dump", async (req0) => {
   const req1 = req0 as MyRequest;
   const { apiGateway, ...req } = req1;
   const { event, context } = apiGateway;
