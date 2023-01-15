@@ -1,14 +1,14 @@
 import { setTimeout } from "node:timers/promises";
 import { Router } from "itty-router";
 import { APIGatewayProxyResultV2 } from "aws-lambda";
-import { loadResults, redis } from "./store.js";
+import { loadSortedResults, redis } from "./store.js";
 import { MyRequest } from "./http.js";
 
 export const router = Router();
 
 router.get("/recent", async (req0) => {
   const req = req0 as MyRequest;
-  const results = await loadResults(redis);
+  const results = await loadSortedResults(redis);
   const entries = results.map((result) => {
     const { label, health } = result;
 
@@ -34,7 +34,7 @@ router.get("/recent", async (req0) => {
         data = undefined;
         break;
     }
-    return [label, data];
+    return [label, data] as const;
   });
 
   const output = Object.fromEntries(entries);

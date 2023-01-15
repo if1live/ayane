@@ -67,6 +67,18 @@ export async function loadResults(
   return results;
 }
 
+export async function loadSortedResults(
+  redis: Redis
+): Promise<Array<{ label: string; health: ServiceHealth }>> {
+  const entries = await loadResults(redis);
+
+  // hgetall로 얻은 결과의 순서가 보장되지 않는다.
+  // 데이터가 그대로인데 새로고침 할때마다 내용이 바뀌는건 원한게 아니다.
+  // 그래서 직접 정렬
+  const sortedEntries = entries.sort((a, b) => a.label.localeCompare(b.label));
+  return sortedEntries;
+}
+
 function transform(
   result: TouchSettledResult<object | boolean>,
   now: Date
