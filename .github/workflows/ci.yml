@@ -41,7 +41,7 @@ jobs:
       - run: pnpm test
 
   deploy:
-    if: ${{ github.event_name == 'push' && (github.ref_name == 'main') }}
+    if: ${{ github.event_name == 'push' && (github.ref_name == 'deploy') }}
 
     needs: [main]
     runs-on: ubuntu-latest
