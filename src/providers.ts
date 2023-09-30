@@ -94,8 +94,12 @@ const touchRedisNaive = async (input: RedisNativeInput): Promise<object> => {
   const redis = new Redis(options);
   await redis.connect();
 
-  const tokens = await redis.hello();
-  const version = tokens[3];
+  // redislab은 hello를 구현하지 않은듯
+  // {"name":"gE","message":"ERR unknown command 'hello'"}
+  const text = await redis.info();
+  const lines = text.split("\r\n");
+  const line_version = lines.find((line) => line.startsWith("redis_version:"));
+  const version = line_version?.split(":")[1];
 
   redis.disconnect(false);
 
