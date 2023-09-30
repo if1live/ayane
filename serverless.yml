@@ -25,7 +25,9 @@ provider:
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
     NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000"
+
     STAGE: ${self:provider.stage}
+    REDIS_URL: ${env:REDIS_URL}
 
     AYANE_PLANETSCALE_LABEL: ${env:AYANE_PLANETSCALE_LABEL}
     AYANE_PLANETSCALE_TYPE: ${env:AYANE_PLANETSCALE_TYPE}
