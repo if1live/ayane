@@ -168,6 +168,20 @@ const touchPostgresNaive = async (input: PostgresInput): Promise<object> => {
     "SELECT VERSION() AS version, NOW() AS now",
   );
   const row = result.rows[0];
+
+  // TODO: kysely로 바꾸고 싶은데. 쿼리 생성만 갖다쓰는 방법 있나?
+  // vitess는 mysql과 비슷하지만 똑같지 않아서 일부 쿼리가 작동하지 않을 수 있다.
+  // 멍청한 방식으로 작성될수록 호환이 잘 될것이다.
+  {
+    const table = "ayane_kernel";
+    const name = "warmup";
+    const value = JSON.stringify(row);
+    const sql1 = `DELETE FROM ${table} WHERE name='${name}'`;
+    const sql2 = `INSERT INTO ${table} (name, value) VALUES ('${name}', '${value}')`;
+    await client.query(sql1);
+    await client.query(sql2);
+  }
+
   await client.end();
 
   const data = row as object;
