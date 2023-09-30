@@ -3,7 +3,6 @@ service: ayane
 useDotenv: true
 
 plugins:
-  - serverless-offline
   - serverless-scriptable-plugin
 
 provider:
@@ -13,12 +12,12 @@ provider:
   region: ap-northeast-1
   stage: dev
 
-  memorySize: 128
+  memorySize: 256
   architecture: arm64
-  timeout: 5
 
-  logRetentionInDays: 7
+  logRetentionInDays: 1
   versionFunctions: false
+  timeout: 5
 
   apiGateway:
     minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
@@ -28,36 +27,46 @@ provider:
     NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000"
     STAGE: ${self:provider.stage}
 
-    MYSQL_DATABASE_URL: ${env:MYSQL_DATABASE_URL}
-    POSTGRES_DATABASE_URL: ${env:POSTGRES_DATABASE_URL}
-    REDIS_URL: ${env:REDIS_URL}
+    AYANE_PLANETSCALE_LABEL: ${env:AYANE_PLANETSCALE_LABEL}
+    AYANE_PLANETSCALE_TYPE: ${env:AYANE_PLANETSCALE_TYPE}
+    AYANE_PLANETSCALE_ARG_1: ${env:AYANE_PLANETSCALE_ARG_1}
 
-    UPSTASH_REDIS_REST_URL: ${env:UPSTASH_REDIS_REST_URL}
-    UPSTASH_REDIS_REST_TOKEN: ${env:UPSTASH_REDIS_REST_TOKEN}
+    AYANE_SUPABASE_LABEL: ${env:AYANE_SUPABASE_LABEL}
+    AYANE_SUPABASE_TYPE: ${env:AYANE_SUPABASE_TYPE}
+    AYANE_SUPABASE_ARG_1: ${env:AYANE_SUPABASE_ARG_1}
+
+    AYANE_REDISLAB_LABEL: ${env:AYANE_REDISLAB_LABEL}
+    AYANE_REDISLAB_TYPE: ${env:AYANE_REDISLAB_TYPE}
+    AYANE_REDISLAB_ARG_1: ${env:AYANE_REDISLAB_ARG_1}
+
+    AYANE_UPSTASH_REDIS_LABEL: ${env:AYANE_UPSTASH_REDIS_LABEL}
+    AYANE_UPSTASH_REDIS_TYPE: ${env:AYANE_UPSTASH_REDIS_TYPE}
+    AYANE_UPSTASH_REDIS_ARG_1: ${env:AYANE_UPSTASH_REDIS_ARG_1}
+    AYANE_UPSTASH_REDIS_ARG_2: ${env:AYANE_UPSTASH_REDIS_ARG_2}
 
 package:
   patterns:
     - "!**"
     - "!node_modules/**"
-    - public/index.html
-    - output/package.json
-    - output/handlers.js
-    - output/handlers.js.map
+    - artifact/handlers.mjs*
+    - views/**/*
 
 functions:
-  touch:
-    handler: output/handlers.touch
+  schedule:
+    handler: artifact/handlers.schedule
     events:
       - schedule: cron(0 12 * * ? *)
   http:
-    handler: output/handlers.http
+    handler: artifact/handlers.http
     url: true
     events:
-      - httpApi: "*"
+      - httpApi:
+          method: ANY
+          path: /
 
 custom:
   scriptHooks:
     # https://github.com/weixu365/serverless-scriptable-plugin/issues/49#issuecomment-594383342
     # serverless-offline 이전에 직접 빌드
-    before:offline:start:init: pnpm run package
-    before:package:createDeploymentArtifacts: pnpm run package
+    before:offline:start:init: pnpm bundle
+    before:package:createDeploymentArtifacts: pnpm bundle

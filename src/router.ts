@@ -1,10 +1,11 @@
+/*
 import path from "node:path";
 import { readFile } from "node:fs/promises";
 import { setTimeout } from "node:timers/promises";
 import { Router } from "itty-router";
 import { APIGatewayProxyResultV2 } from "aws-lambda";
-import { loadSortedResults, redis } from "./store.js";
-import { MyRequest } from "./http.js";
+import { loadSortedResults, redis } from "./stores.js";
+import { MyRequest } from "./app.js";
 
 export const router = Router();
 
@@ -99,3 +100,5 @@ router.all("*", () => {
   };
   return response;
 });
+
+*/

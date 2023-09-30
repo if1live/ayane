@@ -1,8 +1,7 @@
-import { expect } from "expect";
-import assert from "assert";
+import { describe, it, assert } from "vitest";
 import type { Redis } from "ioredis";
 import { default as RedisMock } from "ioredis-mock";
-import { saveResult, loadResults } from "../src/store.js";
+import { loadResults, saveResult } from "../src/stores.js";
 
 function createRedisMock(): Redis {
   const redis = new (RedisMock as any)();
@@ -14,17 +13,18 @@ describe("store", () => {
 
   it("loadResults: empty", async () => {
     const results = await loadResults(redis);
-    expect(results).toHaveLength(0);
+    assert.equal(results.length, 0);
   });
 
   it("scenario: ignore", async () => {
     await saveResult(redis, "not-supported-service", {
       status: "fulfilled",
       value: false,
+      at: new Date(),
     });
 
     const results = await loadResults(redis);
-    expect(results).toHaveLength(0);
+    assert.equal(results.length, 0);
   });
 
   it("scenario: ok", async () => {
@@ -34,18 +34,19 @@ describe("store", () => {
     await saveResult(redis, label, {
       status: "fulfilled",
       value,
+      at: new Date(),
     });
 
     const results = await loadResults(redis);
-    expect(results).toHaveLength(1);
+    assert.equal(results.length, 1);
 
     const [result] = results;
-    expect(result.label).toBe(label);
+    assert.equal(result?.label, label);
 
-    const health = result.health;
-    if (health.tag !== "ok") {
+    const health = result?.health;
+    if (health?.tag !== "ok") {
       assert.fail();
     }
-    expect(health.value).toEqual(value);
+    assert.deepEqual(health.value, value);
   });
 });

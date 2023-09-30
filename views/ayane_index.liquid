@@ -1,0 +1,38 @@
+{% layout "layouts/base_site.liquid" %}
+
+{% block body_content %}
+  <section class="ui container">
+    <h1>ayane</h1>
+
+    {% for row in entries %}
+      {% assign data = row.health %}
+      <h2>
+        {{ row.label }}
+        <small>{{ data.tag }}</small>
+      </h2>
+
+      <p>
+        {{ row.at | date: "%Y-%m-%dT%H:%M:%S" }}
+      </p>
+
+      {% assign tag = data.tag %}
+      {% if tag == "ok" %}
+        <p>{{ data.value | json }}</p>
+      {% elsif tag == "error" %}
+        <p>{{ data.reason | json }}</p>
+      {% elsif tag == "ignore" %}
+        <p>ignore</p>
+      {% endif %}
+    {% endfor %}
+
+    <button hx-post="/touch" hx-target="#result-touch">
+      touch
+    </button>
+    <pre id="result-touch"></pre>
+
+    <button hx-delete="/delete" hx-target="#result-delete">
+      delete
+    </button>
+    <pre id="result-delete"></pre>
+  </section>
+{% endblock %}

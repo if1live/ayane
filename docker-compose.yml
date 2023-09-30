@@ -13,8 +13,8 @@ services:
   mysql:
     image: mysql:8.0-debian
     environment:
-      MYSQL_DATABASE: ayane_dev
       MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: ayane_dev
     ports:
       - 3306:3306
 
@@ -22,3 +22,15 @@ services:
     image: redis:7.0-alpine
     ports:
       - 6379:6379
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - 8080:8080
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"

@@ -3,48 +3,53 @@
   "version": "1.0.0",
   "description": "",
   "license": "MIT",
+  "sideEffects": false,
   "type": "module",
-  "main": "serverless.ts",
+  "module": "dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "files": [
+    "dist",
+    "!dist/test"
+  ],
   "scripts": {
-    "dev": "ts-node-esm ./src/dev.ts",
+    "dev": "node --watch --loader=tsx ./src/dev.ts",
     "build": "tsc",
     "check:watch": "tsc --watch",
-    "clean": "rimraf dist output .serverless",
-    "test": "mocha",
-    "package": "ts-node-esm ./scripts/build.ts"
+    "clean": "rimraf dist artifact .turbo .serverless",
+    "test": "vitest",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "circularDepCheck": "madge --circular src",
+    "bundle": "tsx etc/build_artifact.ts"
   },
   "dependencies": {
-    "@tinyhttp/dotenv": "^2.0.5",
-    "@upstash/redis": "^1.19.1",
-    "ioredis": "^5.2.4",
-    "itty-router": "^3.0.11",
-    "mysql2": "^3.0.1",
-    "pg": "^8.8.0"
+    "@upstash/redis": "^1.22.1",
+    "dotenv": "^16.3.1",
+    "hono": "^3.7.3",
+    "ioredis": "^5.3.2",
+    "liquidjs": "^10.9.2",
+    "mysql2": "^3.6.1",
+    "pg": "^8.11.3",
+    "serverless-standalone": "^0.0.7"
   },
   "devDependencies": {
-    "@swc/core": "^1.3.26",
-    "@swc/helpers": "^0.4.14",
-    "@types/assert": "^1.5.6",
-    "@types/aws-lambda": "^8.10.71",
-    "@types/ioredis-mock": "^8.2.1",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^18.11.18",
-    "@types/pg": "^8.6.6",
-    "assert": "^2.0.0",
-    "esbuild": "^0.14.11",
-    "expect": "^29.3.1",
-    "ioredis-mock": "^8.2.2",
-    "mocha": "^10.2.0",
-    "regenerator-runtime": "^0.13.11",
-    "rimraf": "^4.0.4",
-    "serverless": "^3.0.0",
-    "serverless-offline": "^12.0.4",
-    "serverless-scriptable-plugin": "^1.2.2",
-    "ts-node": "^10.4.0",
-    "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.1.3"
+    "@types/aws-lambda": "^8.10.122",
+    "@types/ioredis-mock": "^8.2.3",
+    "@types/node": "^18.18.1",
+    "@types/pg": "^8.10.3",
+    "cross-env": "^7.0.3",
+    "esbuild": "^0.14.54",
+    "ioredis-mock": "^8.9.0",
+    "madge": "^6.1.0",
+    "prettier": "^3.0.3",
+    "rimraf": "^4.4.1",
+    "serverless": "^3.35.2",
+    "serverless-scriptable-plugin": "^1.3.1",
+    "tsx": "^3.13.0",
+    "typescript": "^5.2.2",
+    "vitest": "^0.33.0"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "packageManager": "pnpm@8.8.0"
 }

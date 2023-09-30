@@ -1,39 +1,18 @@
-import https from "node:https";
-import { Redis as UpstashRedis } from "@upstash/redis";
 import { Redis } from "ioredis";
-import {
-  UPSTASH_REDIS_REST_TOKEN,
-  UPSTASH_REDIS_REST_URL,
-} from "./settings.js";
 import { ServiceHealth, TouchSettledResult } from "./types.js";
 
-function createUpstashRedis(): UpstashRedis | null {
-  if (!UPSTASH_REDIS_REST_URL) return null;
-  if (!UPSTASH_REDIS_REST_TOKEN) return null;
-
-  const agent = new https.Agent({ keepAlive: true });
-  return new UpstashRedis({
-    url: UPSTASH_REDIS_REST_URL,
-    token: UPSTASH_REDIS_REST_TOKEN,
-    responseEncoding: false,
-    agent,
-  });
-}
-const upstashRedis = createUpstashRedis();
-
-// redis와의 접속은 serverless 특성을 생각해서 http 기반 upstash redis 사용한다.
-// 하지만 개발할때는 ioredis-mock같은거 쓰려고 ioredis처럼 취급한다.
-export const redis = upstashRedis as unknown as Redis;
-
 const key = "ayane_status";
+
+export async function deleteResult(redis: Redis) {
+  return await redis.del(key);
+}
 
 export async function saveResult(
   redis: Redis,
   label: string,
-  result: TouchSettledResult<object | boolean>
+  result: TouchSettledResult<object | boolean>,
 ) {
-  const now = new Date();
-  const health = transform(result, now);
+  const health = transform(result);
   switch (health.tag) {
     case "ignore": {
       // redis 명령을 아끼려고 아무것도 하지 않는다
@@ -48,7 +27,7 @@ export async function saveResult(
 }
 
 export async function loadResults(
-  redis: Redis
+  redis: Redis,
 ): Promise<Array<{ label: string; health: ServiceHealth }>> {
   const data = await redis.hgetall(key);
   if (!data) {
@@ -68,7 +47,7 @@ export async function loadResults(
 }
 
 export async function loadSortedResults(
-  redis: Redis
+  redis: Redis,
 ): Promise<Array<{ label: string; health: ServiceHealth }>> {
   const entries = await loadResults(redis);
 
@@ -81,15 +60,15 @@ export async function loadSortedResults(
 
 function transform(
   result: TouchSettledResult<object | boolean>,
-  now: Date
 ): ServiceHealth {
-  const dateStr = now.toISOString();
+  const timestamp = result.at.getTime();
+  const skel = { timestamp } as const;
 
   if (result.status === "rejected") {
     const reason = result.reason;
     return {
+      ...skel,
       tag: "error",
-      dateStr,
       reason: {
         name: reason.name,
         message: reason.message,
@@ -99,6 +78,6 @@ function transform(
 
   const { value } = result;
   return typeof value === "boolean"
-    ? { tag: "ignore" }
-    : { tag: "ok", dateStr, value };
+    ? { ...skel, tag: "ignore" }
+    : { ...skel, tag: "ok", value };
 }

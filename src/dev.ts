@@ -1,5 +1,22 @@
-import { touch } from "./handlers.js";
-import { loadResults, redis } from "./store.js";
+import { standalone, FunctionDefinition } from "serverless-standalone";
+import * as handlers from "./handlers.js";
 
-await touch({} as any, {} as any, {} as any);
-// console.log(JSON.stringify(await loadResults(redis)))
+const definitions: FunctionDefinition[] = [
+  {
+    name: "httpDispatch",
+    handler: handlers.http,
+    events: [{ httpApi: { route: "ANY /{pathname+}" } }],
+  },
+];
+
+const options = {
+  httpApi: { port: 3000 },
+  schedule: {},
+};
+
+const inst = standalone({
+  ...options,
+  functions: definitions,
+});
+await inst.start();
+console.log("standalone", options);
