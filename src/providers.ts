@@ -25,7 +25,7 @@ export const wrapSettled = async <T>(
   try {
     const value = await execute();
     return { status: "fulfilled", value, at };
-  } catch (e: any) {
+  } catch (e: unknown) {
     return { status: "rejected", reason: e as Error, at };
   }
 };

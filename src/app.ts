@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { compress } from "hono/compress";
 import { HTTPException } from "hono/http-exception";
-import { engine, redis } from "./instances.js";
+import { engine, dynamodb } from "./instances.js";
 import { touch } from "./services.js";
 import { deleteResult, loadSortedResults } from "./stores.js";
 
@@ -10,7 +10,7 @@ export const app = new Hono();
 app.use("*", compress());
 
 app.get("*", async (c) => {
-  const results = await loadSortedResults(redis);
+  const results = await loadSortedResults(dynamodb);
   const entries = results.map((x) => {
     return {
       ...x,
@@ -31,7 +31,7 @@ app.post("/touch", async (c) => {
 });
 
 app.delete("/delete", async (c) => {
-  await deleteResult(redis);
+  await deleteResult(dynamodb);
   return c.json({ ok: true });
 });
 

@@ -55,6 +55,8 @@ provider:
             - "dynamodb:PutItem"
             - "dynamodb:DeleteItem"
             - "dynamodb:UpdateItem"
+            - "dynamodb:BatchWriteItem"
+            - "dynamodb:Scan"
           Resource:
             - arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/AyaneKeyValue
 

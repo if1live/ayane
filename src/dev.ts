@@ -1,5 +1,35 @@
 import { standalone, FunctionDefinition } from "serverless-standalone";
+import {
+  CreateTableCommand,
+  ResourceInUseException,
+} from "@aws-sdk/client-dynamodb";
 import * as handlers from "./handlers.js";
+import { dynamodb } from "./instances.js";
+
+const prepare = async () => {
+  try {
+    const result = await dynamodb.send(
+      new CreateTableCommand({
+        TableName: "AyaneKeyValue",
+        AttributeDefinitions: [{ AttributeName: "label", AttributeType: "S" }],
+        KeySchema: [{ AttributeName: "label", KeyType: "HASH" }],
+        ProvisionedThroughput: {
+          ReadCapacityUnits: 1,
+          WriteCapacityUnits: 1,
+        },
+      }),
+    );
+  } catch (e: unknown) {
+    if (e instanceof ResourceInUseException) {
+      // ResourceInUseException: Cannot create preexisting table
+      // console.log(`${e.name}: ${e.message}`);
+    } else {
+      console.error(e);
+      throw e;
+    }
+  }
+};
+await prepare();
 
 const definitions: FunctionDefinition[] = [
   {

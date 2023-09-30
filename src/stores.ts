@@ -1,14 +1,42 @@
-import { Redis } from "ioredis";
+import {
+  DynamoDBClient,
+  ScanCommand,
+  BatchWriteItemCommand,
+  WriteRequest,
+  PutItemCommand,
+} from "@aws-sdk/client-dynamodb";
 import { ServiceHealth, TouchSettledResult } from "./types.js";
 
-const key = "ayane_status";
+const tableName = "AyaneKeyValue";
 
-export async function deleteResult(redis: Redis) {
-  return await redis.del(key);
+export async function deleteResult(dynamodb: DynamoDBClient) {
+  const output = await dynamodb.send(new ScanCommand({ TableName: tableName }));
+  const items = output.Items ?? [];
+
+  if (items.length > 0) {
+    const requests = items.map((item): WriteRequest => {
+      return {
+        DeleteRequest: {
+          Key: { label: item.label! },
+        },
+      };
+    });
+
+    await dynamodb.send(
+      new BatchWriteItemCommand({
+        RequestItems: {
+          [tableName]: requests,
+        },
+      }),
+    );
+    // console.log(`Deleted ${requests.length} items from ${tableName}`);
+  } else {
+    // console.log("No items found");
+  }
 }
 
 export async function saveResult(
-  redis: Redis,
+  dynamodb: DynamoDBClient,
   label: string,
   result: TouchSettledResult<object | boolean>,
 ) {
@@ -20,23 +48,33 @@ export async function saveResult(
     }
     default: {
       const text = JSON.stringify(health);
-      await redis.hset(key, { [label]: text });
+      await dynamodb.send(
+        new PutItemCommand({
+          TableName: tableName,
+          Item: {
+            label: { S: label },
+            text: { S: text },
+            updatedAt: { S: new Date().toISOString() },
+          },
+        }),
+      );
       break;
     }
   }
 }
 
 export async function loadResults(
-  redis: Redis,
+  dynamodb: DynamoDBClient,
 ): Promise<Array<{ label: string; health: ServiceHealth }>> {
-  const data = await redis.hgetall(key);
-  if (!data) {
+  const output = await dynamodb.send(new ScanCommand({ TableName: tableName }));
+  if (!output.Items) {
     return [];
   }
 
   const results = [];
-  for (const entry of Object.entries(data)) {
-    const [label, text] = entry;
+  for (const entry of output.Items) {
+    const label: string = entry.label?.S!;
+    const text: string = entry.text?.S!;
 
     const health: ServiceHealth =
       typeof text === "string" ? JSON.parse(text) : (text as unknown);
@@ -47,9 +85,9 @@ export async function loadResults(
 }
 
 export async function loadSortedResults(
-  redis: Redis,
+  dynamodb: DynamoDBClient,
 ): Promise<Array<{ label: string; health: ServiceHealth }>> {
-  const entries = await loadResults(redis);
+  const entries = await loadResults(dynamodb);
 
   // hgetall로 얻은 결과의 순서가 보장되지 않는다.
   // 데이터가 그대로인데 새로고침 할때마다 내용이 바뀌는건 원한게 아니다.

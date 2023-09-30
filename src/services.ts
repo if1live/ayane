@@ -13,33 +13,33 @@ import {
   UpstashRedisInput,
 } from "./types.js";
 import { providerInputs } from "./settings.js";
-import { redis } from "./instances.js";
+import { dynamodb } from "./instances.js";
 
 const execute_mysql = async (input: MysqlInput) => {
   const { label } = input;
   const result = await touchMysqlSettled(input);
-  await saveResult(redis, label, result);
+  await saveResult(dynamodb, label, result);
   return { label, result };
 };
 
 const execute_postgres = async (input: PostgresInput) => {
   const { label } = input;
   const result = await touchPostgresSettled(input);
-  await saveResult(redis, label, result);
+  await saveResult(dynamodb, label, result);
   return { label, result };
 };
 
 const execute_redisNative = async (input: RedisNativeInput) => {
   const { label } = input;
   const result = await touchRedisNativeSettled(input);
-  await saveResult(redis, label, result);
+  await saveResult(dynamodb, label, result);
   return { label, result };
 };
 
 const execute_upstashRedis = async (input: UpstashRedisInput) => {
   const { label } = input;
   const result = await touchUpstashRedisSettled(input);
-  await saveResult(redis, label, result);
+  await saveResult(dynamodb, label, result);
   return { label, result };
 };
 
