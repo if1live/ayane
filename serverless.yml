@@ -46,6 +46,18 @@ provider:
     AYANE_UPSTASH_REDIS_ARG_1: ${env:AYANE_UPSTASH_REDIS_ARG_1}
     AYANE_UPSTASH_REDIS_ARG_2: ${env:AYANE_UPSTASH_REDIS_ARG_2}
 
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "dynamodb:GetItem"
+            - "dynamodb:PutItem"
+            - "dynamodb:DeleteItem"
+            - "dynamodb:UpdateItem"
+          Resource:
+            - arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/AyaneKeyValue
+
 package:
   patterns:
     - "!**"
@@ -68,6 +80,22 @@ functions:
       - httpApi:
           method: ANY
           path: /{pathname+}
+
+resources:
+  Resources:
+    KeyValueTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: AyaneKeyValue
+        AttributeDefinitions:
+          - AttributeName: label
+            AttributeType: S
+        KeySchema:
+          - AttributeName: label
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 
 custom:
   scriptHooks:
