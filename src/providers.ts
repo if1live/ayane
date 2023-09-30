@@ -101,9 +101,12 @@ const touchRedisNaive = async (input: RedisNativeInput): Promise<object> => {
   const line_version = lines.find((line) => line.startsWith("redis_version:"));
   const version = line_version?.split(":")[1];
 
+  // redis 갱신되는 명령어 보내서 sleeping 방지
+  const counter = await redis.incr("ayane_counter");
+
   redis.disconnect(false);
 
-  return { version };
+  return { version, counter };
 };
 
 const touchUpstashRedis = async (input: UpstashRedisInput): Promise<object> => {
@@ -117,9 +120,10 @@ const touchUpstashRedis = async (input: UpstashRedisInput): Promise<object> => {
   });
 
   // upstash redis client에는 info, hello 같은게 열려있지 않다.
-  const pong = await redis.ping();
+  // 진짜 redis 명령 보내는게 나중에 sleep 정책에 안걸릴듯?
+  const counter = await redis.incr("ayane_counter");
 
-  return { pong };
+  return { counter };
 };
 
 const touchMysqlNaive = async (input: MysqlInput): Promise<object> => {
