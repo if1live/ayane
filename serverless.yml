@@ -65,6 +65,9 @@ functions:
       - httpApi:
           method: ANY
           path: /
+      - httpApi:
+          method: ANY
+          path: /{pathname+}
 
 custom:
   scriptHooks:
