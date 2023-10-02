@@ -29,7 +29,8 @@
     "ioredis": "^5.3.2",
     "liquidjs": "^10.9.2",
     "mysql2": "^3.6.1",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "remeda": "^1.27.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.122",

@@ -29,6 +29,9 @@ dependencies:
   pg:
     specifier: ^8.11.3
     version: 8.11.3
+  remeda:
+    specifier: ^1.27.0
+    version: 1.27.0
 
 devDependencies:
   '@types/aws-lambda':
@@ -5626,7 +5629,6 @@ packages:
 
   /remeda@1.27.0:
     resolution: {integrity: sha512-Vv4gz6z8WnKPA01ObvswV09bBOkB/jKjlszsfxAH82YEvEWfVvaelUuKOpKkLwlli1xyAwwlfWAAmpHlSXENRQ==}
-    dev: true
 
   /require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}

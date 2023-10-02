@@ -1,3 +1,4 @@
+import * as R from "remeda";
 import { saveResult } from "./stores.js";
 import {
   touchMysqlSettled,
@@ -10,9 +11,10 @@ import {
   PostgresInput,
   ProviderInput,
   RedisNativeInput,
+  TouchRejectedResult,
   UpstashRedisInput,
 } from "./types.js";
-import { providerInputs, DISCORD_WEBHOOK_URL } from "./settings.js";
+import * as settings from "./settings.js";
 import { dynamodb } from "./instances.js";
 
 const execute_mysql = async (input: MysqlInput) => {
@@ -58,7 +60,7 @@ const execute = async (input: ProviderInput) => {
 
 export const touch = async () => {
   const entries = await Promise.all(
-    providerInputs.map(async (input) => execute(input)),
+    settings.providerInputs.map(async (input) => execute(input)),
   );
 
   for (const entry of entries) {
@@ -74,19 +76,39 @@ export const touch = async () => {
 
   // discord 기록은 실패할지 모르니까 마지막에 배치
   {
-    const blocks = entries.map((entry) => {
+    const block_env = [
+      "## environment",
+      `* NODE_ENV: ${settings.NODE_ENV}`,
+      `* STAGE: ${settings.STAGE}`,
+    ].join("\n");
+
+    // 성공/실패만 간단하게 보고싶다
+    const lines_status = entries.map((entry) => {
       const { label, result } = entry;
       const ok = result.status === "fulfilled" ? "ok" : "error";
-      const line_header = `## ${label}: ${ok}`;
-      const line_detail =
-        result.status === "fulfilled"
-          ? "```" + JSON.stringify(result.value, null, 2) + "```"
-          : "```" + JSON.stringify(result.reason, null, 2) + "```";
-
-      const block = [line_header, line_detail].join("\n");
-      return block;
+      return `* ${label}: ${ok}`;
     });
-    const text = blocks.join("\n\n");
+    const block_status = ["## status", ...lines_status].join("\n");
+
+    // 실패는 상세 로그가 필요하다. 성공 로그는 노이즈에 불과하다.
+    const lines_error = entries
+      .flatMap((entry) => {
+        if (entry.result.status === "fulfilled") {
+          return null;
+        }
+
+        const { label, result } = entry;
+        const line_header = `### ${label}`;
+        const line_detail =
+          "```" + JSON.stringify(result.reason, null, 2) + "```";
+        return [line_header, line_detail];
+      })
+      .filter(R.isNonNull);
+
+    const block_error =
+      lines_error.length > 0 ? ["## error", ...lines_error].join("\n") : "";
+
+    const text = [block_env, block_status, block_error].join("\n\n");
     await sendMessageToDiscord(text);
   }
 
@@ -94,7 +116,7 @@ export const touch = async () => {
 };
 
 export const sendMessageToDiscord = async (text: string) => {
-  const url = DISCORD_WEBHOOK_URL;
+  const url = settings.DISCORD_WEBHOOK_URL;
   if (!url) {
     return { ok: false, reason: "no webhook url" };
   }
