@@ -22,11 +22,18 @@ const dirname = url.fileURLToPath(new URL(".", import.meta.url));
 export const rootPath = path.join(dirname, "..");
 export const viewPath = path.join(rootPath, "views");
 
-const parse = (prefix: string): ProviderInput => {
-  const label = process.env[`${prefix}_LABEL`]!;
-  const type = process.env[`${prefix}_TYPE`]!;
-  const arg_1 = process.env[`${prefix}_ARG_1`];
-  const arg_2 = process.env[`${prefix}_ARG_2`];
+const parse = (
+  env: Record<string, string | undefined>,
+  prefix: string,
+): ProviderInput => {
+  const label = env[`${prefix}_LABEL`];
+  const type = env[`${prefix}_TYPE`];
+  const arg_1 = env[`${prefix}_ARG_1`];
+  const arg_2 = env[`${prefix}_ARG_2`];
+  const arg_3 = env[`${prefix}_ARG_3`];
+
+  assert(label, "label is empty");
+
   switch (type) {
     case "mysql": {
       assert(arg_1, "endpoint is empty");
@@ -69,8 +76,8 @@ const parse = (prefix: string): ProviderInput => {
 
 // TODO: label, type, args로 알아서 대응하기. env 뜯으면 얻을 수 있다.
 export const providerInputs: ProviderInput[] = [
-  parse("AYANE_PLANETSCALE"),
-  parse("AYANE_SUPABASE"),
-  parse("AYANE_REDISLAB"),
-  parse("AYANE_UPSTASH_REDIS"),
+  parse(process.env, "AYANE_PLANETSCALE"),
+  parse(process.env, "AYANE_SUPABASE"),
+  parse(process.env, "AYANE_REDISLAB"),
+  parse(process.env, "AYANE_UPSTASH_REDIS"),
 ];
