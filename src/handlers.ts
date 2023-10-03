@@ -1,9 +1,9 @@
 import type { APIGatewayProxyHandlerV2, ScheduledHandler } from "aws-lambda";
 import * as Sentry from "@sentry/serverless";
 import { app } from "./app.js";
-import { handle } from "hono/aws-lambda";
 import { touch } from "./services.js";
 import { SENTRY_DSN, NODE_ENV } from "./settings.js";
+import { wrap_apigateway } from "./helpers.js";
 
 if (SENTRY_DSN) {
   Sentry.AWSLambda.init({
@@ -18,9 +18,9 @@ if (SENTRY_DSN) {
   });
 }
 
-const http_inner = handle(app);
+const http_inner = wrap_apigateway(app);
 export const http: APIGatewayProxyHandlerV2 = async (event, context) => {
-  const response = await http_inner(event as any);
+  const response = await http_inner(event, context);
   return response;
 };
 

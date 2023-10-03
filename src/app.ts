@@ -5,6 +5,7 @@ import { HTTPException } from "hono/http-exception";
 import { engine, dynamodb } from "./instances.js";
 import { touch } from "./services.js";
 import { deleteResult, loadSortedResults } from "./stores.js";
+import { getAPIGatewayInput } from "./helpers.js";
 
 const robotsTxt = `
 User-agent: *
@@ -111,6 +112,7 @@ app.get("/sentry/message", async (c) => {
 app.get("/sentry/error/handled", async (c) => {
   try {
     const e = new Error("handled error");
+    e.name = "HandledError";
     (e as any).foo = "bar";
     throw e;
   } catch (e: unknown) {
@@ -120,7 +122,10 @@ app.get("/sentry/error/handled", async (c) => {
 });
 
 app.get("/sentry/error/unhandled", async (c) => {
-  throw new Error("unhandled error");
+  const e = new Error("unhandled error");
+  e.name = "UnhandledError";
+  (e as any).a = 1;
+  throw e;
 });
 
 app.get("/error/plain", async (c) => {
@@ -132,6 +137,16 @@ app.get("/error/plain", async (c) => {
 
 app.get("/error/http", async (c) => {
   throw new HTTPException(403, { message: "hono-http-exception" });
+});
+
+app.all("/dump", async (c) => {
+  const apiGateway = getAPIGatewayInput();
+  if (!apiGateway) {
+    return c.json({ message: "apigateway not found" });
+  }
+
+  const { event, context } = apiGateway;
+  return c.json(event);
 });
 
 app.get("*", async (c) => {
