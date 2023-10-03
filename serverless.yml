@@ -27,6 +27,7 @@ provider:
     NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000"
 
     STAGE: ${self:provider.stage}
+    SENTRY_DSN: ${env:SENTRY_DSN}
     DISCORD_WEBHOOK_URL: ${env:DISCORD_WEBHOOK_URL}
 
     AYANE_PLANETSCALE_LABEL: ${env:AYANE_PLANETSCALE_LABEL}

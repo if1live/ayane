@@ -10,6 +10,8 @@ dotenv.config({ path: envpath });
 export const NODE_ENV = process.env.NODE_ENV || "production";
 export const STAGE = process.env.STAGE || "dev";
 
+export const SENTRY_DSN = process.env.SENTRY_DSN;
+
 // 데이터 저장을 꼭 해야되나? 로그니까 디스코드에 남겨도 될거같은데
 export const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
 
