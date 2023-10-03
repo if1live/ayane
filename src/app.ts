@@ -18,10 +18,9 @@ app.onError(async (err, c) => {
   const extractStatusCode = (err: any) => err.status ?? err.statusCode ?? 500;
   const status = extractStatusCode(err);
 
-  // 관심있는 에러만 센트리로 취급
+  // 관심있는 에러만 센트리로 보낸다
   if (status >= 500) {
     Sentry.captureException(err);
-    await Sentry.flush(3000);
   }
 
   interface ErrorModel {
@@ -73,7 +72,11 @@ app.use("*", compress());
 
 app.use("*", async (_, next) => {
   await next();
-  await Sentry.flush(3000);
+
+  // https://github.com/getsentry/sentry-javascript/blob/develop/packages/serverless/src/awslambda.ts
+  // flushTimeout은 sentry serverless 정책 가져옴
+  const flushTimeout = 2000;
+  await Sentry.flush(flushTimeout).catch((e) => console.error(e));
 });
 
 app.get("/", async (c) => {
