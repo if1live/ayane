@@ -44,8 +44,8 @@ devDependencies:
     specifier: ^8.10.122
     version: 8.10.122
   '@types/node':
-    specifier: ^18.18.1
-    version: 18.18.1
+    specifier: ^20.10.2
+    version: 20.10.2
   '@types/pg':
     specifier: ^8.10.3
     version: 8.10.3
@@ -65,8 +65,8 @@ devDependencies:
     specifier: ^4.4.1
     version: 4.4.1
   serverless:
-    specifier: ^3.35.2
-    version: 3.35.2
+    specifier: ^3.38.0
+    version: 3.38.0
   serverless-scriptable-plugin:
     specifier: ^1.3.1
     version: 1.3.1
@@ -1568,14 +1568,14 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@serverless/dashboard-plugin@7.0.5(supports-color@8.1.1):
-    resolution: {integrity: sha512-OpZJpldLCJmQ/JCvuSCbWaNd6CprQ8yDi9lqrpP3WeR61jOGG8JFxmMs6hjpDd9bKyUMnQ9qAJ+C+QbAxdUosw==}
+  /@serverless/dashboard-plugin@7.2.0(supports-color@8.1.1):
+    resolution: {integrity: sha512-Gqzgef+KmrX1OxJW9aubrIN6AvPrtDARMv+NegMNEe+pfkZA/IMuZiSyYUaHgARokdw2/IALOysTLgdFJIrXvA==}
     engines: {node: '>=12.0'}
     dependencies:
       '@aws-sdk/client-cloudformation': 3.421.0
       '@aws-sdk/client-sts': 3.421.0
       '@serverless/event-mocks': 1.1.1
-      '@serverless/platform-client': 4.4.0(supports-color@8.1.1)
+      '@serverless/platform-client': 4.5.1(supports-color@8.1.1)
       '@serverless/utils': 6.15.0
       child-process-ext: 3.0.2
       chokidar: 3.5.3
@@ -1611,13 +1611,13 @@ packages:
       lodash: 4.17.21
     dev: true
 
-  /@serverless/platform-client@4.4.0(supports-color@8.1.1):
-    resolution: {integrity: sha512-urL7SNefRqC2EOFDcpvm8fyn/06B5yXWneKpyGw7ylGt0Qr9JHZCB9TiUeTkIpPUNz0jTvKUaJ2+M/JNEiaVIA==}
+  /@serverless/platform-client@4.5.1(supports-color@8.1.1):
+    resolution: {integrity: sha512-XltmO/029X76zi0LUFmhsnanhE2wnqH1xf+WBt5K8gumQA9LnrfwLgPxj+VA+mm6wQhy+PCp7H5SS0ZPu7F2Cw==}
     engines: {node: '>=10.0'}
     dependencies:
       adm-zip: 0.5.10
       archiver: 5.3.2
-      axios: 0.21.4
+      axios: 1.6.2
       fast-glob: 3.3.1
       https-proxy-agent: 5.0.1(supports-color@8.1.1)
       ignore: 5.2.4
@@ -2019,7 +2019,7 @@ packages:
     resolution: {integrity: sha512-oyl4jvAfTGX9Bt6Or4H9ni1Z447/tQuxnZsytsCaExKlmJiU8sFgnIBRzJUpKwB5eWn9HuBYlUlVA74q/yN0eQ==}
     dependencies:
       '@types/connect': 3.4.36
-      '@types/node': 18.18.1
+      '@types/node': 20.10.2
     dev: false
 
   /@types/cacheable-request@6.0.3:
@@ -2027,7 +2027,7 @@ packages:
     dependencies:
       '@types/http-cache-semantics': 4.0.2
       '@types/keyv': 3.1.4
-      '@types/node': 18.18.1
+      '@types/node': 20.10.2
       '@types/responselike': 1.0.1
     dev: true
 
@@ -2044,13 +2044,13 @@ packages:
   /@types/connect@3.4.36:
     resolution: {integrity: sha512-P63Zd/JUGq+PdrM1lv0Wv5SBYeA2+CORvbrXbngriYY0jzLUWfQMQQxOhjONEz/wlHOAxOdY7CY65rgQdTjq2w==}
     dependencies:
-      '@types/node': 18.18.1
+      '@types/node': 20.10.2
     dev: false
 
   /@types/express-serve-static-core@4.17.37:
     resolution: {integrity: sha512-ZohaCYTgGFcOP7u6aJOhY9uIZQgZ2vxC2yWoArY+FeDXlqeH66ZVBjgvg+RLVAS/DWNq4Ap9ZXu1+SUQiiWYMg==}
     dependencies:
-      '@types/node': 18.18.1
+      '@types/node': 20.10.2
       '@types/qs': 6.9.8
       '@types/range-parser': 1.2.5
       '@types/send': 0.17.2
@@ -2080,7 +2080,7 @@ packages:
   /@types/keyv@3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 18.18.1
+      '@types/node': 20.10.2
     dev: true
 
   /@types/lodash@4.14.199:
@@ -2099,13 +2099,15 @@ packages:
     resolution: {integrity: sha512-Wj+fqpTLtTbG7c0tH47dkahefpLKEbB+xAZuLq7b4/IDHPl/n6VoXcyUQ2bypFlbSwvCr0y+bD4euTTqTJsPxQ==}
     dev: false
 
-  /@types/node@18.18.1:
-    resolution: {integrity: sha512-3G42sxmm0fF2+Vtb9TJQpnjmP+uKlWvFa8KoEGquh4gqRmoUG/N0ufuhikw6HEsdG2G2oIKhog1GCTfz9v5NdQ==}
+  /@types/node@20.10.2:
+    resolution: {integrity: sha512-37MXfxkb0vuIlRKHNxwCkb60PNBpR94u4efQuN4JgIAm66zfCDXGSAFCef9XUWFovX2R1ok6Z7MHhtdVXXkkIw==}
+    dependencies:
+      undici-types: 5.26.5
 
   /@types/pg@8.10.3:
     resolution: {integrity: sha512-BACzsw64lCZesclRpZGu55tnqgFAYcrCBP92xLh1KLypZLCOsvJTSTgaoFVTy3lCys/aZTQzfeDxtjwrvdzL2g==}
     dependencies:
-      '@types/node': 18.18.1
+      '@types/node': 20.10.2
       pg-protocol: 1.6.0
       pg-types: 4.0.1
     dev: true
@@ -2121,21 +2123,21 @@ packages:
   /@types/readable-stream@4.0.3:
     resolution: {integrity: sha512-Z8BOzyIj3UPpn3j5DmDNKIw4wPN9N8a1d1oyteiprWq+wxdgQNC0UfFAQwWjmjyA7uoj7mvoWgxWWH66zYtm4Q==}
     dependencies:
-      '@types/node': 18.18.1
+      '@types/node': 20.10.2
       safe-buffer: 5.1.2
     dev: true
 
   /@types/responselike@1.0.1:
     resolution: {integrity: sha512-TiGnitEDxj2X0j+98Eqk5lv/Cij8oHd32bU4D/Yw6AOq7vvTk0gSD2GPj0G/HkvhMoVsdlhYF4yqqlyPBTM6Sg==}
     dependencies:
-      '@types/node': 18.18.1
+      '@types/node': 20.10.2
     dev: true
 
   /@types/send@0.17.2:
     resolution: {integrity: sha512-aAG6yRf6r0wQ29bkS+x97BIs64ZLxeE/ARwyS6wrldMm3C1MdKwCcnnEwMC1slI8wuxJOpiUH9MioC0A0i+GJw==}
     dependencies:
       '@types/mime': 1.3.3
-      '@types/node': 18.18.1
+      '@types/node': 20.10.2
     dev: false
 
   /@types/serve-static@1.15.3:
@@ -2143,13 +2145,13 @@ packages:
     dependencies:
       '@types/http-errors': 2.0.2
       '@types/mime': 3.0.2
-      '@types/node': 18.18.1
+      '@types/node': 20.10.2
     dev: false
 
   /@types/ws@8.5.6:
     resolution: {integrity: sha512-8B5EO9jLVCy+B58PLHvLDuOD8DRVMgQzq8d55SjLCOn9kqGyqOvy27exVaTio1q1nX5zLu8/6N0n2ThSxOM6tg==}
     dependencies:
-      '@types/node': 18.18.1
+      '@types/node': 20.10.2
     dev: true
 
   /@typescript-eslint/types@4.33.0:
@@ -2487,10 +2489,12 @@ packages:
       xml2js: 0.5.0
     dev: true
 
-  /axios@0.21.4:
-    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
+  /axios@1.6.2:
+    resolution: {integrity: sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==}
     dependencies:
       follow-redirects: 1.15.3
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
     dev: true
@@ -2594,7 +2598,7 @@ packages:
     resolution: {integrity: sha512-xq+q3SRMOxGivLhBNaUdC64hDTQwejJ+H0T/NB1XMtTVEwNTrfFF3gAxiyW0Bu/xWEGhjVKgUcMhCrUy2+uCWg==}
     dependencies:
       base64-js: 1.5.1
-      ieee754: 1.1.13
+      ieee754: 1.2.1
       isarray: 1.0.0
     dev: true
 
@@ -5637,6 +5641,10 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
+  /proxy-from-env@1.1.0:
+    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+    dev: true
+
   /pump@3.0.0:
     resolution: {integrity: sha512-LwZy+p3SFs1Pytd/jYct4wpv49HiYCqd9Rlc5ZVdk0V+8Yzv6jR5Blk3TRmPL1ft69TxP0IMZGJ+WPFU2BFhww==}
     dependencies:
@@ -5964,14 +5972,14 @@ packages:
       - utf-8-validate
     dev: true
 
-  /serverless@3.35.2:
-    resolution: {integrity: sha512-1RZ4eHl2OaGG2Rzw0l0ZD3byCk2JMCL9/+btzGQGQruuQWu9HwRZGJI7l4A2ghW3Mu6DVwLYLfceNpmEWBZoag==}
+  /serverless@3.38.0:
+    resolution: {integrity: sha512-NJE1vOn8XmQEqfU9UxmVhkUFaCRmx6FhYw/jITN863WlOt4Y3PQbj3hwQyIb5QS1ZrXFq5ojklwewUXH7xGpdA==}
     engines: {node: '>=12.0'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@serverless/dashboard-plugin': 7.0.5(supports-color@8.1.1)
-      '@serverless/platform-client': 4.4.0(supports-color@8.1.1)
+      '@serverless/dashboard-plugin': 7.2.0(supports-color@8.1.1)
+      '@serverless/platform-client': 4.5.1(supports-color@8.1.1)
       '@serverless/utils': 6.15.0
       abort-controller: 3.0.0
       ajv: 8.12.0
@@ -6546,6 +6554,9 @@ packages:
       through: 2.3.8
     dev: true
 
+  /undici-types@5.26.5:
+    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+
   /uni-global@1.0.0:
     resolution: {integrity: sha512-WWM3HP+siTxzIWPNUg7hZ4XO8clKi6NoCAJJWnuRL+BAqyFXF8gC03WNyTefGoUXYc47uYgXxpKLIEvo65PEHw==}
     dependencies:
@@ -6613,7 +6624,7 @@ packages:
       builtins: 1.0.3
     dev: true
 
-  /vite-node@0.33.0(@types/node@18.18.1):
+  /vite-node@0.33.0(@types/node@20.10.2):
     resolution: {integrity: sha512-19FpHYbwWWxDr73ruNahC+vtEdza52kA90Qb3La98yZ0xULqV8A5JLNPUff0f5zID4984tW7l3DH2przTJUZSw==}
     engines: {node: '>=v14.18.0'}
     hasBin: true
@@ -6623,7 +6634,7 @@ packages:
       mlly: 1.4.2
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 4.4.9(@types/node@18.18.1)
+      vite: 4.4.9(@types/node@20.10.2)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -6635,7 +6646,7 @@ packages:
       - terser
     dev: true
 
-  /vite@4.4.9(@types/node@18.18.1):
+  /vite@4.4.9(@types/node@20.10.2):
     resolution: {integrity: sha512-2mbUn2LlUmNASWwSCNSJ/EG2HuSRTnVNaydp6vMCm5VIqJsjMfbIWtbH2kDuwUVW5mMUKKZvGPX/rqeqVvv1XA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -6663,7 +6674,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.18.1
+      '@types/node': 20.10.2
       esbuild: 0.18.20
       postcss: 8.4.31
       rollup: 3.29.4
@@ -6704,7 +6715,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.6
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.18.1
+      '@types/node': 20.10.2
       '@vitest/expect': 0.33.0
       '@vitest/runner': 0.33.0
       '@vitest/snapshot': 0.33.0
@@ -6723,8 +6734,8 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.5.1
       tinypool: 0.6.0
-      vite: 4.4.9(@types/node@18.18.1)
-      vite-node: 0.33.0(@types/node@18.18.1)
+      vite: 4.4.9(@types/node@20.10.2)
+      vite-node: 0.33.0(@types/node@20.10.2)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
