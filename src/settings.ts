@@ -76,7 +76,6 @@ const parse = (
 
 // TODO: label, type, args로 알아서 대응하기. env 뜯으면 얻을 수 있다.
 export const providerInputs: ProviderInput[] = [
-  parse(process.env, "AYANE_PLANETSCALE"),
   parse(process.env, "AYANE_SUPABASE"),
   parse(process.env, "AYANE_REDISLAB"),
   parse(process.env, "AYANE_UPSTASH_REDIS"),
