@@ -16,7 +16,7 @@
     "build": "tsc",
     "check:watch": "tsc --watch",
     "clean": "rimraf dist artifact .turbo .serverless",
-    "dev": "tsx --watch ./src/dev.ts",
+    "dev": "tsx --env-file=.env.development --watch ./src/dev.ts",
     "fix": "biome check --write --unsafe  .",
     "lint": "biome check .",
     "test": "vitest"
