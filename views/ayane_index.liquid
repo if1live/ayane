@@ -31,12 +31,12 @@
       {% if tag == "ok" %}
         <details>
           <summary>detail</summary>
-          <pre>{{ data.value | json: 2 }}</pre>
+          <code>{{ data.value | json: 2 }}</code>
         </details>
       {% elsif tag == "error" %}
         <details open>
           <summary>detail</summary>
-          <pre>{{ data.reason | json: 2 }}</pre>
+          <code>{{ data.reason | json: 2 }}</code>
         </details>
       {% elsif tag == "ignore" %}
         <p>ignore</p>
@@ -47,12 +47,18 @@
 
     <button hx-post="/touch" hx-target="#result-touch">
       touch
+      <span class="htmx-indicator">
+        <i class="spinner icon"></i>
+      </span>
     </button>
-    <pre id="result-touch"></pre>
+    <code id="result-touch"></code>
 
     <button hx-delete="/delete" hx-target="#result-delete">
       delete
+      <span class="htmx-indicator">
+        <i class="spinner icon"></i>
+      </span>
     </button>
-    <pre id="result-delete"></pre>
+    <code id="result-delete"></code>
   </section>
 {% endblock %}

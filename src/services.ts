@@ -101,7 +101,7 @@ export const touch = async () => {
         const line_header = `### ${label}`;
         const text_detail = JSON.stringify(result.reason, null, 2);
         // biome-ignore lint/style/useTemplate: <explanation>
-        const line_detail = "```" + text_detail + "```";
+        const line_detail = "```json" + text_detail + "```";
         return [line_header, line_detail];
       })
       .filter(R.isNonNull);
