@@ -1,8 +1,8 @@
-import { standalone, FunctionDefinition } from "serverless-standalone";
 import {
   CreateTableCommand,
   ResourceInUseException,
 } from "@aws-sdk/client-dynamodb";
+import { type FunctionDefinition, standalone } from "serverless-standalone";
 import * as handlers from "./handlers.js";
 import { dynamodb } from "./instances.js";
 

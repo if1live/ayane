@@ -1,10 +1,10 @@
 import https from "node:https";
-import { Redis, RedisOptions } from "ioredis";
 import { Redis as UpstashRedis } from "@upstash/redis";
-import { RowDataPacket } from "mysql2";
+import { Redis, type RedisOptions } from "ioredis";
+import type { RowDataPacket } from "mysql2";
 import { default as mysql } from "mysql2/promise";
 import { default as pg } from "pg";
-import {
+import type {
   MysqlInput,
   PostgresInput,
   RedisNativeInput,
@@ -83,7 +83,7 @@ const touchRedisNaive = async (input: RedisNativeInput): Promise<object> => {
   const url = new URL(endpoint);
   const options: RedisOptions = {
     host: url.hostname,
-    port: parseInt(url.port, 10),
+    port: Number.parseInt(url.port, 10),
     password: url.password,
     // https://github.com/luin/ioredis/issues/1123#issuecomment-920905876
     enableAutoPipelining: true,

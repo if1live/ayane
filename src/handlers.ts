@@ -1,9 +1,9 @@
-import type { APIGatewayProxyHandlerV2, ScheduledHandler } from "aws-lambda";
 import * as Sentry from "@sentry/serverless";
+import type { APIGatewayProxyHandlerV2, ScheduledHandler } from "aws-lambda";
 import { app } from "./app.js";
-import { touch } from "./services.js";
-import { SENTRY_DSN, NODE_ENV } from "./settings.js";
 import { wrap_apigateway } from "./helpers.js";
+import { touch } from "./services.js";
+import { NODE_ENV, SENTRY_DSN } from "./settings.js";
 
 if (SENTRY_DSN) {
   Sentry.AWSLambda.init({

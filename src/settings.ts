@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import path from "node:path";
 import url from "node:url";
-import { ProviderInput } from "./types.js";
+import type { ProviderInput } from "./types.js";
 
 export const NODE_ENV = process.env.NODE_ENV || "production";
 export const STAGE = process.env.STAGE || "dev";

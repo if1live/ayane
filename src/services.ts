@@ -1,21 +1,21 @@
 import * as R from "remeda";
-import { saveResult } from "./stores.js";
+import { dynamodb } from "./instances.js";
 import {
   touchMysqlSettled,
   touchPostgresSettled,
   touchRedisNativeSettled,
   touchUpstashRedisSettled,
 } from "./providers.js";
-import {
-  MysqlInput,
-  PostgresInput,
-  ProviderInput,
-  RedisNativeInput,
-  TouchRejectedResult,
-  UpstashRedisInput,
-} from "./types.js";
 import * as settings from "./settings.js";
-import { dynamodb } from "./instances.js";
+import { saveResult } from "./stores.js";
+import {
+  type MysqlInput,
+  type PostgresInput,
+  type ProviderInput,
+  type RedisNativeInput,
+  TouchRejectedResult,
+  type UpstashRedisInput,
+} from "./types.js";
 
 const execute_mysql = async (input: MysqlInput) => {
   const { label } = input;
@@ -99,8 +99,9 @@ export const touch = async () => {
 
         const { label, result } = entry;
         const line_header = `### ${label}`;
-        const line_detail =
-          "```" + JSON.stringify(result.reason, null, 2) + "```";
+        const text_detail = JSON.stringify(result.reason, null, 2);
+        // biome-ignore lint/style/useTemplate: <explanation>
+        const line_detail = "```" + text_detail + "```";
         return [line_header, line_detail];
       })
       .filter(R.isNonNull);

@@ -1,11 +1,11 @@
 import {
-  DynamoDBClient,
-  ScanCommand,
   BatchWriteItemCommand,
-  WriteRequest,
+  type DynamoDBClient,
   PutItemCommand,
+  ScanCommand,
+  type WriteRequest,
 } from "@aws-sdk/client-dynamodb";
-import { ServiceHealth, TouchSettledResult } from "./types.js";
+import type { ServiceHealth, TouchSettledResult } from "./types.js";
 
 const tableName = "AyaneKeyValue";
 
@@ -17,6 +17,7 @@ export async function deleteResult(dynamodb: DynamoDBClient) {
     const requests = items.map((item): WriteRequest => {
       return {
         DeleteRequest: {
+          // biome-ignore lint/style/noNonNullAssertion: <explanation>
           Key: { label: item.label! },
         },
       };
@@ -73,8 +74,8 @@ export async function loadResults(
 
   const results = [];
   for (const entry of output.Items) {
-    const label: string = entry.label?.S!;
-    const text: string = entry.text?.S!;
+    const label: string = entry.label?.S ?? "";
+    const text: string = entry.text?.S ?? "";
 
     const health: ServiceHealth =
       typeof text === "string" ? JSON.parse(text) : (text as unknown);

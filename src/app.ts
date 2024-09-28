@@ -1,11 +1,12 @@
-import { ErrorHandler, Hono } from "hono";
 import * as Sentry from "@sentry/node";
+import { type ErrorHandler, Hono } from "hono";
 import { compress } from "hono/compress";
 import { HTTPException } from "hono/http-exception";
-import { engine, dynamodb } from "./instances.js";
+import type { StatusCode } from "hono/utils/http-status";
+import { getAPIGatewayInput } from "./helpers.js";
+import { dynamodb, engine } from "./instances.js";
 import { touch } from "./services.js";
 import { deleteResult, loadSortedResults } from "./stores.js";
-import { getAPIGatewayInput } from "./helpers.js";
 
 const robotsTxt = `
 User-agent: *
@@ -15,7 +16,16 @@ Disallow: /
 export const app = new Hono();
 
 app.onError(async (err, c) => {
-  const extractStatusCode = (err: any) => err.status ?? err.statusCode ?? 500;
+  const extractStatusCode = (
+    err: Error & {
+      status?: number;
+      statusCode?: number;
+    },
+  ): StatusCode => {
+    const status = err.status ?? err.statusCode ?? 500;
+    return status as StatusCode;
+  };
+
   const status = extractStatusCode(err);
 
   // 관심있는 에러만 센트리로 보낸다
@@ -116,7 +126,6 @@ app.get("/sentry/error/handled", async (c) => {
   try {
     const e = new Error("handled error");
     e.name = "HandledError";
-    (e as any).foo = "bar";
     throw e;
   } catch (e: unknown) {
     Sentry.captureException(e);
@@ -127,14 +136,6 @@ app.get("/sentry/error/handled", async (c) => {
 app.get("/sentry/error/unhandled", async (c) => {
   const e = new Error("unhandled error");
   e.name = "UnhandledError";
-  (e as any).a = 1;
-  throw e;
-});
-
-app.get("/error/plain", async (c) => {
-  const e = new Error("plain-error-message");
-  e.name = "PlainError";
-  (e as any).status = 401;
   throw e;
 });
 
@@ -153,5 +154,5 @@ app.all("/dump", async (c) => {
 });
 
 app.get("*", async (c) => {
-  throw new HTTPException(404, { message: `not found` });
+  throw new HTTPException(404, { message: "not found" });
 });

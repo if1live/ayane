@@ -1,11 +1,11 @@
 import { AsyncLocalStorage } from "node:async_hooks";
-import {
+import type {
   APIGatewayProxyEvent,
   APIGatewayProxyEventV2,
   APIGatewayProxyStructuredResultV2,
   Context,
 } from "aws-lambda";
-import { Hono } from "hono";
+import type { Hono } from "hono";
 import { handle } from "hono/aws-lambda";
 
 export type APIGatewayInput = {
@@ -32,6 +32,7 @@ export const wrap_apigateway = (app: Hono) => {
     };
 
     const response = await asyncLocalStorage.run(apigw, async () => {
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       return await handle_core(event as any);
     });
 

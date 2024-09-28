@@ -1,5 +1,5 @@
-import { Liquid } from "liquidjs";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { Liquid } from "liquidjs";
 import * as settings from "./settings.js";
 
 export const engine = new Liquid({
