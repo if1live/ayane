@@ -27,7 +27,7 @@ const opts = {
   sourcemap: true,
   treeShaking: true,
   platform: "node",
-  external: ["@aws-sdk"],
+  external: ["@aws-sdk", "aws-sdk"],
   target: "node20",
   format: "esm",
   mainFields: ["module", "main"],
