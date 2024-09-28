@@ -7,7 +7,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TABLE "ayane_kernel" (
+CREATE TABLE infra."ayane_kernel" (
     "id" SERIAL NOT NULL PRIMARY KEY,
     "name" VARCHAR NOT NULL,
     "value" TEXT NOT NULL,
@@ -16,8 +16,8 @@ CREATE TABLE "ayane_kernel" (
 );
 
 CREATE TRIGGER set_timestamp
-BEFORE UPDATE ON ayane_kernel
+BEFORE UPDATE ON infra.ayane_kernel
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
-CREATE UNIQUE INDEX "ayane_kernel_name_key" ON "ayane_kernel"("name");
+CREATE UNIQUE INDEX "ayane_kernel_name_key" ON infra."ayane_kernel"("name");

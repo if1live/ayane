@@ -173,7 +173,7 @@ const touchPostgresNaive = async (input: PostgresInput): Promise<object> => {
   // vitess는 mysql과 비슷하지만 똑같지 않아서 일부 쿼리가 작동하지 않을 수 있다.
   // 멍청한 방식으로 작성될수록 호환이 잘 될것이다.
   {
-    const table = "ayane_kernel";
+    const table = "infra.ayane_kernel";
     const name = "warmup";
     const value = JSON.stringify(row);
     const sql1 = `DELETE FROM ${table} WHERE name='${name}'`;
