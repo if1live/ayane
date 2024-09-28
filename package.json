@@ -12,46 +12,43 @@
     "!dist/test"
   ],
   "scripts": {
-    "dev": "tsx --watch ./src/dev.ts",
+    "artifact": "tsx etc/build_artifact.js",
     "build": "tsc",
     "check:watch": "tsc --watch",
     "clean": "rimraf dist artifact .turbo .serverless",
-    "test": "vitest",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "circularDepCheck": "madge --circular src",
-    "bundle": "tsx etc/build_artifact.ts"
+    "dev": "tsx --watch ./src/dev.ts",
+    "fix": "biome check --write --unsafe  .",
+    "lint": "biome check .",
+    "test": "vitest"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.658.1",
     "@sentry/node": "^7.119.0",
     "@sentry/serverless": "^7.114.0",
     "@upstash/redis": "^1.34.0",
-    "dotenv": "^16.4.5",
-    "hono": "^3.12.12",
+    "hono": "^4.6.3",
     "ioredis": "^5.4.1",
     "liquidjs": "^10.17.0",
     "mysql2": "^3.11.3",
     "pg": "^8.13.0",
-    "remeda": "^1.61.0"
+    "remeda": "^2.14.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.2",
     "@types/aws-lambda": "^8.10.145",
-    "@types/node": "^20.16.10",
+    "@types/node": "^22.7.4",
     "@types/pg": "^8.11.10",
-    "cross-env": "^7.0.3",
-    "esbuild": "^0.14.54",
-    "madge": "^6.1.0",
-    "prettier": "^3.3.3",
-    "rimraf": "^4.4.1",
+    "esbuild": "^0.24.0",
+    "rimraf": "^6.0.1",
     "serverless": "^3.39.0",
     "serverless-scriptable-plugin": "^1.3.1",
     "serverless-standalone": "^0.0.7",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
-    "vitest": "^0.33.0"
+    "vitest": "^2.1.1"
   },
+  "packageManager": "pnpm@9.11.0",
   "engines": {
-    "node": ">=18.0.0"
-  },
-  "packageManager": "pnpm@8.11.0"
+    "node": ">=22.0.0"
+  }
 }

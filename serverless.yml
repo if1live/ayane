@@ -101,5 +101,5 @@ custom:
   scriptHooks:
     # https://github.com/weixu365/serverless-scriptable-plugin/issues/49#issuecomment-594383342
     # serverless-offline 이전에 직접 빌드
-    before:offline:start:init: pnpm bundle
-    before:package:createDeploymentArtifacts: pnpm bundle
+    before:offline:start:init: pnpm artifact
+    before:package:createDeploymentArtifacts: pnpm artifact

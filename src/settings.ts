@@ -1,12 +1,7 @@
-import dotenv from "dotenv";
 import assert from "node:assert";
 import path from "node:path";
 import url from "node:url";
 import { ProviderInput } from "./types.js";
-
-const env = process.env.NODE_ENV || "development";
-const envpath = path.resolve(process.cwd(), `.env.${env}`);
-dotenv.config({ path: envpath });
 
 export const NODE_ENV = process.env.NODE_ENV || "production";
 export const STAGE = process.env.STAGE || "dev";
